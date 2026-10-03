@@ -12,7 +12,12 @@ app.get('/health', (req, res) => {
 });
 
 app.post('/reports', async (req, res) => {
-  const { topic } = req.body;
+  const topic = req.body?.topic;
+
+  if (typeof topic !== 'string' || topic.trim() === '') {
+    return res.status(400).json({ error: 'topic is required' });
+  }
+
   const id = randomUUID();
 
   reports.set(id, { id, topic, status: 'pending' });
